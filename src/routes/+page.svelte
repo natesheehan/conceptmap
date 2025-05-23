@@ -291,12 +291,7 @@ colorScale = d3.scaleOrdinal()
         </div>
 
         <!-- Selected Node Info -->
-
-    </div>
-
-    <!-- Graph -->
-    <svg id="graph" class="flex-1"></svg>
-    <div class="flex-1 overflow-y-auto">
+             <div class="flex-1 overflow-y-auto">
         {#if selectedNode}
             <div class="mt-4 space-y-2">
                 <h3 class="text-lg font-semibold text-gray-900 capitalize">{selectedNode}</h3>
@@ -307,4 +302,10 @@ colorScale = d3.scaleOrdinal()
         {/if}
 
     </div>
+
+    </div>
+
+    <!-- Graph -->
+    <svg id="graph" class="flex-1"></svg>
+
 </div>
