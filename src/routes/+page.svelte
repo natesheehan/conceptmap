@@ -9,7 +9,7 @@
     let searchSuggestions = [];
     let selectedNode = null;
 
-    const csvUrl = 'concepts.csv';
+    const csvUrl = 'data.csv';
 
     function parseRelation(relationText) {
         const match = relationText.match(/\((.*?)\)\s*(.+)/);
@@ -31,11 +31,12 @@
             if (d.Term) nodeSet.add(d.Term.toLowerCase());
         });
 
+
         const tempLinks = [];
         data.forEach(d => {
             const source = d.Term ? d.Term.toLowerCase() : null;
-            if (source && d.Relations_lower) {
-                const relations = d.Relations_lower.split(';');
+            if (source && d.Relations) {
+                const relations = d.Relations.split(';');
                 relations.forEach(r => {
                     const parsed = parseRelation(r.trim());
                     if (parsed && nodeSet.has(parsed.target)) {
@@ -290,19 +291,20 @@ colorScale = d3.scaleOrdinal()
         </div>
 
         <!-- Selected Node Info -->
-        <div class="flex-1 overflow-y-auto">
-            {#if selectedNode}
-                <div class="mt-4 space-y-2">
-                    <h3 class="text-lg font-semibold text-gray-900 capitalize">{selectedNode}</h3>
-                    <p class="text-gray-700"><strong>Citation:</strong> {selected ? selected.citation : 'Not found'}</p>
-                    <p class="text-gray-700"><strong>Example:</strong> {selected ? selected.example : 'Not found'}</p>
-                    <p class="text-gray-700"><strong>Definition:</strong> {selected ? selected.definition : 'Not found'}</p>
-                </div>
-            {/if}
 
-        </div>
     </div>
 
     <!-- Graph -->
     <svg id="graph" class="flex-1"></svg>
+    <div class="flex-1 overflow-y-auto">
+        {#if selectedNode}
+            <div class="mt-4 space-y-2">
+                <h3 class="text-lg font-semibold text-gray-900 capitalize">{selectedNode}</h3>
+                <p class="text-gray-700"><strong>Citation:</strong> {selected ? selected.citation : 'Not found'}</p>
+                <p class="text-gray-700"><strong>Example:</strong> {selected ? selected.example : 'Not found'}</p>
+                <p class="text-gray-700"><strong>Definition:</strong> {selected ? selected.definition : 'Not found'}</p>
+            </div>
+        {/if}
+
+    </div>
 </div>
