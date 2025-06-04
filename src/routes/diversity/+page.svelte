@@ -1,7 +1,8 @@
 <script>
-	import { onMount, tick } from 'svelte';
+	import { onMount, tick, onDestroy } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import * as d3 from 'd3';
+    import Menu from '$lib/components/Menu.svelte';
 
 	let nodes = [], links = [], data = [];
 	let searchTerm = '', searchSuggestions = [], selectedNode = null;
@@ -16,6 +17,28 @@
 		const match = text.match(/\((.*?)\)\s*(.+)/);
 		return match ? { type: match[1].trim().toLowerCase(), target: match[2].trim().toLowerCase() } : null;
 	}
+
+function handleClickOutside(event) {
+	setTimeout(async () => {
+		const popup = document.getElementById('node-popup');
+		if (popup && !popup.contains(event.target)) {
+			selectedNode = null;
+			searchSuggestions = [];
+			await tick();
+			drawGraph(); // <- restore all connections
+		}
+	}, 0);
+}
+
+
+
+onMount(() => {
+	document.addEventListener('mousedown', handleClickOutside);
+});
+onDestroy(() => {
+	document.removeEventListener('mousedown', handleClickOutside);
+});
+
 
 	$: selected = nodes.find(n => n.id === selectedNode);
 
@@ -69,10 +92,20 @@ onMount(async () => {
 		height = window.innerHeight;
 
 		d3.select("#graph").selectAll("*").remove();
-		svg = d3.select("#graph")
-			.attr("width", width)
-			.attr("height", height)
-			.style("background", "floralwhite");
+
+
+svg = d3.select("#graph")
+	.attr("width", width)
+	.attr("height", height)
+	.style("background", "white")
+.on("dblclick", async () => {
+	selectedNode = null;
+	searchSuggestions = [];
+	await tick();
+	drawGraph();
+});
+
+
 
 		zoomContainer = svg.append("g");
 		svg.call(d3.zoom().scaleExtent([0.5, 5]).on("zoom", ({ transform }) => {
@@ -82,7 +115,7 @@ onMount(async () => {
 		const relationTypes = [...new Set(links.map(l => l.type).filter(Boolean))].sort();
 		colorScale = d3.scaleOrdinal()
 			.domain(relationTypes)
-			.range(["#60a5fa", "#facc15", "#34d399", "#f87171", "#a78bfa", "#309898", "#F3F3E0", "#183B4E", "#FFC1DA"]);
+			.range(["#60a5fa", "#facc15", "#34d399", "#f87171", "#a78bfa", "#309898", "#F3F3E0", "#683B4E", "#FFC1DA"]);
 
 		simulation = d3.forceSimulation(nodes)
 			.force("link", d3.forceLink(links).id(d => d.id).distance(150))
@@ -327,10 +360,12 @@ $: if (svg && filteredLinks) {
 	:global(body) {
 		margin: 0;
 		font-family: 'Inter', sans-serif;
-		background-color: #0f172a;
+	
 		color: #f8fafc;
 	}
 </style>
+
+<Menu/>
 
 <svg id="graph" class="absolute top-0 left-0 w-full h-full z-0"></svg>
 
@@ -354,7 +389,7 @@ $: if (svg && filteredLinks) {
 	<!-- Legend -->
 	<!-- UI Dropdown for selecting relation types -->
 {#if colorScale}
-	<div class="p-3 bg-white rounded shadow text-black">
+	<div class="p-3 bg-white rounded shadow text-black mt-15">
 		<h4 class="font-bold mb-2">Filter Relations</h4>
 
 	<div class="flex gap-2 mb-2">
@@ -435,28 +470,34 @@ $: if (svg && filteredLinks) {
 </div>
 
 {#if selectedNode}
-	<div
-		in:fly={{ x: 300 }}
-		out:fly={{ x: 300 }}
-		class="absolute top-0 right-0 w-full max-w-md h-full bg-white text-gray-800 p-6 shadow-xl overflow-y-auto z-20 border-l border-gray-200"
-	>
+<div
+	id="node-popup"
+	in:fly={{ x: 300 }}
+	out:fly={{ x: 300 }}
+	class="absolute top-20 right-0 w-full max-w-md h-90% bg-white text-gray-800 p-6 shadow-xl overflow-y-auto z-20 border-l border-gray-200"
+>
+
 		<!-- Header -->
 		<div class="flex justify-between items-start mb-6">
 			<div>
 				<h2 class="text-2xl font-bold capitalize mb-1">{selectedNode}</h2>
 				<p class="text-sm text-gray-500">Node details</p>
 			</div>
-			<button
-				on:click={() => selectedNode = null}
-				class="text-gray-400 hover:text-gray-600 text-xl font-bold leading-none"
-				aria-label="Close"
-			>
-				✕
-			</button>
+<button
+	on:click={async () => {
+		selectedNode = null;
+		await tick();
+		drawGraph();
+	}}
+	class="text-gray-400 hover:text-gray-600 text-xl font-bold leading-none"
+	aria-label="Close"
+>
+	✕
+</button>
+
 		</div>
 
 		<!-- Citations -->
-	<!-- Citations -->
 <div class="mb-8">
 	<h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-3">Citations</h3>
 	{#if selected?.citation}
@@ -488,6 +529,9 @@ $: if (svg && filteredLinks) {
 				</li>
 			{/each}
 		</ul>
+       <button class="mt-5 float-right bg-green-400 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors duration-200">
+	Add Citation
+</button>
 	{:else}
 		<p class="text-gray-500 italic">No citations available.</p>
 	{/if}
@@ -496,7 +540,7 @@ $: if (svg && filteredLinks) {
 
 	<!-- Example -->
 <div class="mb-8">
-	<h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-2">Example</h3>
+	<h3 class="text-sm mt-15 font-semibold text-gray-600 uppercase tracking-wider mb-2">Example</h3>
 	<div class="rounded border border-gray-200 bg-gray-50 px-4 py-3 space-y-4">
 		{#each renderFormattedBlocks(selected?.example) as block}
 			<p class="text-gray-700 text-sm leading-relaxed">
@@ -516,13 +560,17 @@ $: if (svg && filteredLinks) {
 				{/each}
 			</p>
 		{/each}
+         
 	</div>
+        <button class="mt-5 float-right bg-green-400 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors duration-200">
+	Add Example
+</button>
 </div>
 
 
 	<!-- Definition -->
 <div>
-	<h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-2">Definition</h3>
+	<h3 class="text-sm mt-15 font-semibold text-gray-600 uppercase tracking-wider mb-2">Definition</h3>
 	<div class="space-y-6 text-base leading-relaxed text-gray-700">
 		{#each renderFormattedBlocks(selected?.definition) as block}
 			{#if block.length && block[0].text.trim().startsWith('"')}
@@ -563,6 +611,10 @@ $: if (svg && filteredLinks) {
 		{/each}
 	</div>
 </div>
+<button class="mt-5 float-right bg-green-400 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors duration-200">
+	Add Definition
+</button>
+
 	</div>
 {/if}
 
