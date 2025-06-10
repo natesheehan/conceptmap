@@ -108,7 +108,7 @@ svg = d3.select("#graph")
 
 
 		zoomContainer = svg.append("g");
-		svg.call(d3.zoom().scaleExtent([0.5, 5]).on("zoom", ({ transform }) => {
+		svg.call(d3.zoom().scaleExtent([0.1, 5]).on("zoom", ({ transform }) => {
 			zoomContainer.attr("transform", transform);
 		}));
 
@@ -369,20 +369,20 @@ $: if (svg && filteredLinks) {
 
 <svg id="graph" class="absolute top-0 left-0 w-full h-full z-0"></svg>
 
-	<div class="absolute top-20 w-full text-white bg-black">
+	<!-- <div class="absolute top-20 w-full text-white bg-black">
 		<h1> Diversity </h1>
 		<p> This map was created based primarily on readings from an interdisciplinary, international, online reading group, beginning in mid-2024. We thank everyone who came along and shared their insights and ideas and contributed to a series of enlightening and provocative discussions.</p>
-	</div>
+	</div> -->
 
 
 <!-- Floating Controls -->
-<div class="absolute top-44 left-4 z-10 space-y-2 w-79">
+<div class="absolute top-30 left-4 z-10 space-y-2 w-79">
 	<input
 		type="text"
 		bind:value={searchTerm}
 		on:input={onSearchInput}
 		placeholder="Search concept..."
-		class="w-full px-4 py-2 rounded shadow-md bg-white text-black"
+		class="w-full px-4 py-2 rounded shadow-md bg-white text-black z-50 sticky"
 	/>
 	{#if searchSuggestions.length}
 		<ul class="bg-white rounded shadow text-black">

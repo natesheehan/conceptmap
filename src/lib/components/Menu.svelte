@@ -104,7 +104,7 @@
 	{/if}
 </nav>
 
-<footer class="fixed bottom-0 text-black text-justify">
+<footer class="fixed bottom-0 right-0 text-black text-justify float-right w-1/2">
 				<div class="flex items-center space-x-2">
 				<img src="/network.png" alt="Logo" class="h-8 w-8" />
 				<span class="text-xl font-semibold text-gray-800"><a href="/">ConceptMap</a></span>
