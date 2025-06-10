@@ -18,12 +18,12 @@
 
 		<section class="space-y-6 text-lg leading-relaxed">
 			<p>
-				<b>Who and what is included or excluded?</b> How does that matter both for what and how we know, and for matters of recognition, equity, and justice? These are topics at the forefront of fields like
+				Who and what is included or excluded in knowledge practice? How does that matter both for what and how we know, and for recognition, equity, and justice? These are topics at the forefront of fields like 
 				<span class="italic">feminist epistemology, critical race studies, social epistemology, political epistemology, indigenous studies, science and technology studies,</span> and <span class="italic">philosophy of science</span>.
 			</p>
 
 			<p>
-				The map makes visible some of the intertwined political and epistemic dimensions of knowledge creation and sharing discussed in this literature. Like all maps, this one is a single perspective on a complicated terrain. It is non-exhaustive. It connects ideas, rather than citations. It aims to give a sense for the diversity of voices and areas where these topics come up, while acknowledging that there is so much more to see and do between and beyond the points we depict. 
+				The map makes visible some of the intertwined political and epistemic dimensions of knowledge creation and sharing discussed in this literature. Like all maps, this one is a single perspective on a complicated terrain. It is non-exhaustive. It connects ideas, rather than citations. It aims to give a sense for the diversity of voices and areas where these topics come up, while acknowledging that there is so much more to see and do between and beyond the points we depict.
 			</p>
 
 			<p>
@@ -33,6 +33,9 @@
 			<p class="font-medium italic text-center text-gray-700">
 				May the map serve you well on your journey.
 			</p>
+
+
 		</section>
 	</div>
 </main>
+

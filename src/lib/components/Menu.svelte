@@ -91,7 +91,7 @@
 		<div class="md:hidden px-4 pb-4 space-y-4 bg-white border-t border-gray-200">
 			<div>
 				<p class="font-medium text-gray-900">Maps</p>
-				<a href="/maps/diversity" class="block text-gray-700 pl-4 py-1">Diversity</a>
+				<a href="/diversity" class="block text-gray-700 pl-4 py-1">Diversity</a>
 				<span class="block text-gray-400 pl-4 py-1">Normativity (coming soon)</span>
 			</div>
 			<div>
@@ -103,3 +103,13 @@
 		</div>
 	{/if}
 </nav>
+
+<footer class="fixed bottom-0 text-black text-justify">
+				<div class="flex items-center space-x-2">
+				<img src="/network.png" alt="Logo" class="h-8 w-8" />
+				<span class="text-xl font-semibold text-gray-800"><a href="/">ConceptMap</a></span>
+			</div>
+				
+				<i>This map was created based primarily on readings from an interdisciplinary, international, online reading group, beginning in mid-2024. We thank everyone who came along and shared their insights and ideas and contributed to a series of enlightening and provocative discussions.</i>
+		
+</footer>

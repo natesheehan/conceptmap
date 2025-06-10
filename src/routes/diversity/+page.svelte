@@ -6,7 +6,7 @@
 
 	let nodes = [], links = [], data = [];
 	let searchTerm = '', searchSuggestions = [], selectedNode = null;
-	const csvUrl = 'data.csv';
+	const csvUrl = 'dict.csv';
 
 	let svg, simulation, zoomContainer;
 	let width, height, colorScale;
@@ -71,7 +71,7 @@ onMount(async () => {
 
 	colorScale = d3.scaleOrdinal()
 		.domain(relationTypes)
-		.range(["#60a5fa", "#facc15", "#34d399", "#f87171", "#a78bfa", "#309898", "#F3F3E0", "#183B4E", "#FFC1DA"]);
+		.range(["#60a5fa", "#facc15", "#34d399", "#f87171", "#a78bfa", "#309898", "#c26c04", "#183B4E", "#FFC1DA"]);
 
 	// ✅ Must reset this to trigger reactive update of filteredLinks
 	selectedRelationTypes = new Set(relationTypes);
@@ -369,8 +369,14 @@ $: if (svg && filteredLinks) {
 
 <svg id="graph" class="absolute top-0 left-0 w-full h-full z-0"></svg>
 
+	<div class="absolute top-20 w-full text-white bg-black">
+		<h1> Diversity </h1>
+		<p> This map was created based primarily on readings from an interdisciplinary, international, online reading group, beginning in mid-2024. We thank everyone who came along and shared their insights and ideas and contributed to a series of enlightening and provocative discussions.</p>
+	</div>
+
+
 <!-- Floating Controls -->
-<div class="absolute top-4 left-4 z-10 space-y-2 w-72">
+<div class="absolute top-44 left-4 z-10 space-y-2 w-79">
 	<input
 		type="text"
 		bind:value={searchTerm}
@@ -389,7 +395,7 @@ $: if (svg && filteredLinks) {
 	<!-- Legend -->
 	<!-- UI Dropdown for selecting relation types -->
 {#if colorScale}
-	<div class="p-3 bg-white rounded shadow text-black mt-15">
+	<div class="p-3 bg-white rounded shadow text-black mt-5">
 		<h4 class="font-bold mb-2">Filter Relations</h4>
 
 	<div class="flex gap-2 mb-2">
@@ -537,37 +543,6 @@ $: if (svg && filteredLinks) {
 	{/if}
 </div>
 
-
-	<!-- Example -->
-<div class="mb-8">
-	<h3 class="text-sm mt-15 font-semibold text-gray-600 uppercase tracking-wider mb-2">Example</h3>
-	<div class="rounded border border-gray-200 bg-gray-50 px-4 py-3 space-y-4">
-		{#each renderFormattedBlocks(selected?.example) as block}
-			<p class="text-gray-700 text-sm leading-relaxed">
-				{#each block as part}
-					{#if part.type === 'citation' && part.url}
-						<a
-							href={part.url}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="text-blue-600 hover:underline"
-						>
-							([{part.text}])
-						</a>
-					{:else}
-						{@html part.text.replace(/\n/g, '<br>')}
-					{/if}
-				{/each}
-			</p>
-		{/each}
-         
-	</div>
-        <button class="mt-5 float-right bg-green-400 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors duration-200">
-	Add Example
-</button>
-</div>
-
-
 	<!-- Definition -->
 <div>
 	<h3 class="text-sm mt-15 font-semibold text-gray-600 uppercase tracking-wider mb-2">Definition</h3>
@@ -614,6 +589,35 @@ $: if (svg && filteredLinks) {
 <button class="mt-5 float-right bg-green-400 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors duration-200">
 	Add Definition
 </button>
+
+	<!-- Example -->
+<div class="mb-8">
+	<h3 class="text-sm mt-15 font-semibold text-gray-600 uppercase tracking-wider mb-2">Example</h3>
+	<div class="rounded border border-gray-200 bg-gray-50 px-4 py-3 space-y-4">
+		{#each renderFormattedBlocks(selected?.example) as block}
+			<p class="text-gray-700 text-sm leading-relaxed">
+				{#each block as part}
+					{#if part.type === 'citation' && part.url}
+						<a
+							href={part.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-blue-600 hover:underline"
+						>
+							([{part.text}])
+						</a>
+					{:else}
+						{@html part.text.replace(/\n/g, '<br>')}
+					{/if}
+				{/each}
+			</p>
+		{/each}
+         
+	</div>
+        <button class="mt-5 float-right bg-green-400 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors duration-200">
+	Add Example
+</button>
+</div>
 
 	</div>
 {/if}
